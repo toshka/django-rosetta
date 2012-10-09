@@ -382,5 +382,5 @@ lang_sel = user_passes_test(lambda user: can_translate(user), settings.LOGIN_URL
 
 
 def can_translate(user):
-    return user.has_perm('edit_translations')
+    return user.has_perm('translations_edit')
 
