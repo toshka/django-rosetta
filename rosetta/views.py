@@ -168,7 +168,9 @@ def home(request):
                             pass
 
                     # touch __init__ file for reload project
-                    os.utime(os.path.join(settings.PROJECT_ROOT, '__init__.py'), None)
+                    appname = settings.INSTALLED_APPS[0]
+                    os.utime(os.path.join(appname, '__init__.py'), None)
+
 
                 except:
                     storage.set('rosetta_i18n_write', False)
