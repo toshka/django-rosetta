@@ -167,6 +167,9 @@ def home(request):
                             # we may not be running under uwsgi :P
                             pass
 
+                    # touch __init__ file for reload project
+                    os.utime(os.path.join(settings.PROJECT_ROOT, '__init__.py'), None)
+
                 except:
                     storage.set('rosetta_i18n_write', False)
                 storage.set('rosetta_i18n_pofile', rosetta_i18n_pofile)
@@ -375,17 +378,5 @@ lang_sel = user_passes_test(lambda user: can_translate(user), settings.LOGIN_URL
 
 
 def can_translate(user):
-    if not getattr(settings, 'ROSETTA_REQUIRES_AUTH', True):
-        return True
-    if not user.is_authenticated():
-        return False
-    elif user.is_superuser and user.is_staff:
-        return True
-    else:
-        try:
-            from django.contrib.auth.models import Group
-            translators = Group.objects.get(name='translators')
-            return translators in user.groups.all()
-        except Group.DoesNotExist:
-            return False
+    return user.has_perm('edit_translations')
 
