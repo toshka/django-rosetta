@@ -178,7 +178,7 @@ def home(request):
 
                 # Retain query arguments
                 query_arg = '?_next=1'
-                if 'query' in request.GET or 'query' in request.POST:
+                if 'query' in request.REQUEST:
                     query_arg += '&query=%s' % request.REQUEST.get('query')
                 if 'page' in request.GET:
                     query_arg += '&page=%d&_next=1' % int(request.GET.get('page'))
@@ -210,6 +210,8 @@ def home(request):
             if page > paginator.num_pages:
                 page = 1
             query_arg = '?page=%d' % page
+            if 'query' in request.REQUEST:
+                query_arg += '&query=%s' % request.REQUEST.get('query')
             return HttpResponseRedirect(reverse('rosetta-home') + iri_to_uri(query_arg))
 
         rosetta_messages = paginator.page(page).object_list
